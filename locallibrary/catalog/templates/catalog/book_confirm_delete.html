@@ -1,0 +1,29 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+    <h1>Delete Book: {{ book.title }}</h1>
+    {#    {% if next %}#}
+    {#    	<h3>Your book instance have been deleted successfully!!</h3>#}
+    {#    {% endif %}#}
+
+    {% if book.bookinstance_set.all %}
+        <p>You can't delete this book until all its associated bookinstance have been deleted!!</p>
+
+        <ul>
+            {% for bookinst in book.bookinstance_set.all %}
+                <li><a href="{% url 'bookinst-delete' bookinst.id %}">({{ bookinst.book }}) - ({{ bookinst.id }}) -
+                    ({{ bookinst.borrower }}) - ({{ bookinst.due_back }})</a></li>
+            {% endfor %}
+
+        </ul>
+    {% else %}
+        <p>Are you sure you want to delete the book???</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Yes, Delete the Book!!">
+            {#            <input type="hidden" name="next" value="{{ next }}">#}
+        </form>
+
+    {% endif %}
+{% endblock %}
